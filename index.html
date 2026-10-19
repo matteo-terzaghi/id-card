@@ -797,16 +797,16 @@
         function showSetup(data) {
             editing = Boolean(data);
             
-            const firstNameFromUrl = getUrlParameter("firstName");
-            const lastNameFromUrl = getUrlParameter("lastName");
-            const workPhoneFromUrl = getUrlParameter("workPhone");
-            const mobileFromUrl = getUrlParameter("mobile");
-            const streetFromUrl = getUrlParameter("street");
-            const cityFromUrl = getUrlParameter("city");
-            const postalCodeFromUrl = getUrlParameter("postalCode");
-            const roleFromUrl = getUrlParameter("role");
-            const departmentFromUrl = getUrlParameter("department");
-            const emailFromUrl = getUrlParameter("email");
+            const firstNameFromUrl = getUrlParameter("firstName") || '';
+            const lastNameFromUrl = getUrlParameter("lastName") || '';
+            const workPhoneFromUrl = getUrlParameter("workPhone") || '';
+            const mobileFromUrl = getUrlParameter("mobile") || '';
+            const streetFromUrl = getUrlParameter("street") || '';
+            const cityFromUrl = getUrlParameter("city") || '';
+            const postalCodeFromUrl = getUrlParameter("postalCode") || '';
+            const roleFromUrl = getUrlParameter("role") || '';
+            const departmentFromUrl = getUrlParameter("department") || '';
+            const emailFromUrl = getUrlParameter("email") || '';
             
             fields.forEach(function (key) {
                 const field = getField(key);
