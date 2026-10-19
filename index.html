@@ -497,7 +497,7 @@
                 <div class="field">
                     <label for="department">Dipartimento / Ufficio</label>
                     <textarea id="department" name="department"
-                              maxlength="300"></textarea>
+                              maxlength="300" disabled></textarea>
                 </div>
                 <p class="section-title">Contatti</p>
                 <div class="field">
@@ -790,12 +790,21 @@
                 return false;
             }
         }
+        function getUrlParameter(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name) || "";
+        }
         function showSetup(data) {
             editing = Boolean(data);
-            formError.hidden = true;
-            formError.textContent = "";
+            
+            const departmentFromUrl = getUrlParameter("department");
+            
             fields.forEach(function (key) {
                 const field = getField(key);
+                if (key === "department" && departmentFromUrl) {
+                    field.value = departmentFromUrl;
+                    return;
+                }
                 if (data) {
                     field.value = data[key] || DEFAULT_VALUES[key] || "";
                 } else {
