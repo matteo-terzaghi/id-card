@@ -481,13 +481,13 @@
                     <label for="firstName">Nome *</label>
                     <input id="firstName" name="firstName"
                            autocomplete="given-name" required
-                           maxlength="80">
+                           maxlength="80" disabled>
                 </div>
                 <div class="field">
                     <label for="lastName">Cognome *</label>
                     <input id="lastName" name="lastName"
                            autocomplete="family-name" required
-                           maxlength="80">
+                           maxlength="80" disabled>
                 </div>
                 <div class="field">
                     <label for="role">Ruolo professionale *</label>
@@ -531,19 +531,19 @@
                     <label for="street">Indirizzo</label>
                     <input id="street" name="street"
                            autocomplete="street-address"
-                           maxlength="180">
+                           maxlength="180" disabled>
                 </div>
                 <div class="field">
                     <label for="city">Città</label>
                     <input id="city" name="city"
                            autocomplete="address-level2"
-                           maxlength="100">
+                           maxlength="100" disabled>
                 </div>
                 <div class="field">
                     <label for="postalCode">CAP</label>
                     <input id="postalCode" name="postalCode"
                            autocomplete="postal-code"
-                           maxlength="15">
+                           maxlength="15" disabled>
                 </div>
                 <div class="field">
                     <label>Sito web ICS Maugeri</label>
@@ -797,11 +797,51 @@
         function showSetup(data) {
             editing = Boolean(data);
             
+            const firstNameFromUrl = getUrlParameter("firstName");
+            const lastNameFromUrl = getUrlParameter("lastName");
+            const workPhoneFromUrl = getUrlParameter("workPhone");
+            const mobileFromUrl = getUrlParameter("mobile");
+            const streetFromUrl = getUrlParameter("street");
+            const cityFromUrl = getUrlParameter("city");
+            const postalCodeFromUrl = getUrlParameter("postalCode");
+            const roleFromUrl = getUrlParameter("role");
             const departmentFromUrl = getUrlParameter("department");
             const emailFromUrl = getUrlParameter("email");
             
             fields.forEach(function (key) {
                 const field = getField(key);
+                if (key === "firstName" && firstNameFromUrl) {
+                    field.value = firstNameFromUrl;
+                    return;
+                }
+                if (key === "lastName" && lastNameFromUrl) {
+                    field.value = lastNameFromUrl;
+                    return;
+                }
+                if (key === "workPhone" && workPhoneFromUrl) {
+                    field.value = workPhoneFromUrl;
+                    return;
+                }
+                if (key === "mobile" && mobileFromUrl) {
+                    field.value = mobileFromUrl;
+                    return;
+                }
+                if (key === "street" && streetFromUrl) {
+                    field.value = streetFromUrl;
+                    return;
+                }
+                if (key === "city" && cityFromUrl) {
+                    field.value = cityFromUrl;
+                    return;
+                }
+                if (key === "postalCode" && postalCodeFromUrl) {
+                    field.value = postalCodeFromUrl;
+                    return;
+                }
+                if (key === "role" && roleFromUrl) {
+                    field.value = roleFromUrl;
+                    return;
+                }
                 if (key === "department" && departmentFromUrl) {
                     field.value = departmentFromUrl;
                     return;
