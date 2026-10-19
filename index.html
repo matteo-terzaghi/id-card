@@ -516,7 +516,7 @@
                     <label for="email">E-mail</label>
                     <input id="email" name="email"
                            type="email" autocomplete="email"
-                           maxlength="150">
+                           maxlength="150" disabled>
                 </div>
                 <p class="section-title">Azienda</p>
                 <div class="field">
@@ -798,11 +798,16 @@
             editing = Boolean(data);
             
             const departmentFromUrl = getUrlParameter("department");
+            const emailFromUrl = getUrlParameter("email");
             
             fields.forEach(function (key) {
                 const field = getField(key);
                 if (key === "department" && departmentFromUrl) {
                     field.value = departmentFromUrl;
+                    return;
+                }
+                if (key === "email" && emailFromUrl) {
+                    field.value = emailFromUrl;
                     return;
                 }
                 if (data) {
