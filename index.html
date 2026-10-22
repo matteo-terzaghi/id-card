@@ -345,7 +345,6 @@
     function applyPublicMode() {
       getField("editProfile").closest(".icon-action").hidden = true;
       getField("openQR").closest(".icon-action").hidden = true;
-      getField("shareContact").closest(".icon-action").hidden = true;
       document.querySelector("#cardView > .buttons").hidden = true;
       publicActions.hidden = false;
     }
@@ -615,8 +614,6 @@
       }
       downloadVCard();
     }
-    getField("shareContact").addEventListener("click", addToContacts);
-
     
     async function showQRCode() {
       const overlay = getField("qrOverlay");
