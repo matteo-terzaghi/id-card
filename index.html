@@ -272,7 +272,12 @@
         <div class="icon-action">
           <button id="openQR" class="icon-button" type="button" aria-label="Mostra QR Code" title="Mostra QR Code">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"></rect><rect x="5" y="5" width="2" height="2"></rect><rect x="15" y="3" width="6" height="6" rx="1"></rect><rect x="17" y="5" width="2" height="2"></rect><rect x="3" y="15" width="6" height="6" rx="1"></rect><rect x="5" y="17" width="2" height="2"></rect><path d="M13 13h2v2h-2zM17 13h4M17 17h2v4M13 18h2v3M20 19h1"></path></svg>
-          </button><span>QR Code</span>
+          </button><span>Condividi scheda contatto</span>
+        </div>
+        <div class="icon-action">
+          <button id="openShareQR" class="icon-button" type="button" aria-label="Condividi biglietto"  title="Condividi biglietto">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><rect x="4" y="18" width="16" height="3" rx="1"></rect></svg>
+          </button><span>Condividi biglietto da visita</span>
         </div>
       </div>
     </section>
@@ -280,11 +285,21 @@
 
   <div id="qrOverlay" class="qr-overlay">
     <div class="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
-      <h2 id="qrTitle">Aggiungi contatto</h2>
-      <p>Inquadra il QR Code con la fotocamera dello smartphone per importare il contatto.</p>
+      <h2 id="qrTitle">Aggiungi contatto in rubrica</h2>
+      <p>Inquadra il QR Code con la fotocamera dello smartphone per importare il contatto nella rubrica del telefono.</p>
       <div id="qrcode"><p>Generazione QR Code...</p></div>
       <p id="qrContactName"></p>
       <button id="closeQR" class="qr-close" type="button">Chiudi</button>
+    </div>
+  </div>
+
+  <div id="shareOverlay" class="qr-overlay">
+    <div class="qr-modal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+      <h2 id="shareTitle">Condividi biglietto da visita</h2>
+      <p>Inquadra il QR Code con la fotocamera dello smartphone per aprire questo biglietto da visita direttamente sul telefono.</p>
+      <div id="shareQRCode"><p>Generazione QR Code...</p></div>
+      <p id="shareContactName"></p>
+      <button id="closeShareQR" class="qr-close" type="button">Chiudi</button>
     </div>
   </div>
 
@@ -622,10 +637,74 @@
     document.addEventListener("keydown", event => {
       if (event.key === "Escape" && getField("qrOverlay").classList.contains("visible")) closeQRCode();
     });
+    function createSharedUrl() {
+      const params = new URLSearchParams();
+      fields.forEach(field => {
+        if(profile[field]) {
+          params.set(field, profile[field]);
+        }
+      });
+      params.set("shared", "1");
+      return window.location.origin +
+             window.location.pathname +
+             "?" +
+             params.toString();
+    }
+    async function showShareQRCode() {
+      const overlay = document.getElementById("shareOverlay");
+      const container = document.getElementById("shareQRCode");
+      container.innerHTML = "<p>Generazione QR Code...</p>";
+      overlay.classList.add("visible");
+      document.getElementById("shareContactName").textContent = profile.firstName + " " + profile.lastName;
+      const shareUrl = createSharedUrl();
+      try {
+          const params = new URLSearchParams({
+              size: "240x240",
+              data: shareUrl,
+              ecc: "M",
+              margin: "10"
+          });
+          const response = await fetch(
+              "https://api.qrserver.com/v1/create-qr-code/?"
+              + params.toString()
+          );
+          const blob = await response.blob();
+          const img = document.createElement("img");
+          img.src = URL.createObjectURL(blob);
+          container.replaceChildren(img);
+      }
+      catch(error){
+          console.error(error);
+          container.innerHTML = "<p>Errore nella generazione del QR.</p>";
+      }
+    }
+    function closeShareQRCode(){
+        document.getElementById("shareOverlay").classList.remove("visible");
+    }
+    document.getElementById("openShareQR").addEventListener("click", showShareQRCode);
+    document.getElementById("closeShareQR").addEventListener("click", closeShareQRCode);
+    document.getElementById("shareOverlay").addEventListener("click", e => { if(e.target === document.getElementById("shareOverlay")){closeShareQRCode();}});
 
-    profile = loadProfile();
-    if (profile) showCard();
-    else showSetup(null);
+    function loadSharedProfile() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("shared") !== "1") {
+        return null;
+      }
+      const shared = {};
+      fields.forEach(field => {
+        shared[field] = params.get(field) || "";
+      });
+      return normalizeProfile(shared);
+    }
+    const sharedProfile = loadSharedProfile();
+    if (sharedProfile) {
+      profile = sharedProfile;
+      showCard();
+      document.querySelector("#editProfile").closest(".icon-action").hidden = true;
+    } else {
+      profile = loadProfile();
+      if (profile) { showCard(); } else { showSetup(null); }
+    }
   </script>
 </body>
 </html>
