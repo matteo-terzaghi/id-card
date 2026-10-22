@@ -167,6 +167,17 @@
       .icon-button { width: 50px; height: 50px; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
+    .address-link { display: block; color: rgba(255, 255, 255, 0.82); text-decoration: none; cursor: pointer; transition: opacity: 0.15s ease; }
+    .address-link::after { content: " ↗"; white-space: nowrap; font-size: 12px; opacity: 0.8 }
+    .address-link:active { opacity: 0.6 }
+    .address-link:focus-visible { outline: 2px solid white; outline-offset: 4px; border-radius: 3px }
+    .maps-overlay { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    .maps-overlay[hidden] { display: none; }
+    .maps-modal { width: 100%; max-width: 320px; padding: 25px 20px; border-radius: 24px; background: #f2f2f2; text-align: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); }
+    .maps-modal h2 { color: #263b42; font-size: 22px; margin-bottom: 8px; }
+    .maps-modal p { color: #64757a; font-size: 14px; margin-bottom: 20px; }
+    .maps-modal button { width: 100%; min-height: 48px; margin-top: 10px; border: 0; border-radius: 14px; background: rgb(55, 111, 128); color: white; font-weight: 700; cursor: pointer; }
+    .maps-modal #cancelMapsButton { background: #e4e8e9; color: #365762; }
   </style>
 </head>
 <body>
@@ -228,7 +239,7 @@
           <p id="displayFiscal" class="fiscal"></p>
           <div class="address-row" id="addressRow">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
-            <p id="displayAddress" class="address"></p>
+            <a id="displayAddress" class="address address-link" href="#" role="button" aria-label="Scegli il navigatore"></a>
           </div>
         </section>
       </article>
@@ -256,7 +267,7 @@
         </div>
         <div class="icon-action">
           <button id="editProfile" class="icon-button" type="button" aria-label="Modifica informazioni" title="Modifica informazioni">
-<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.75a3.25 3.25 0 1 0 0 6.5a3.25 3.25 0 0 0 0-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" transform="translate(0.05 -0.31)"/><path d="M10 3.5h4l.55 2.1a6.9 6.9 0 0 1 1.45.84l2.05-.7 2 3.46-1.5 1.55a6.8 6.8 0 0 1 0 1.7l1.5 1.55-2 3.46-2.05-.7a6.9 6.9 0 0 1-1.45.84L14 19.7h-4l-.55-2.1A6.9 6.9 0 0 1 8 16.76l-2.05.7-2-3.46 1.5-1.55a6.8 6.8 0 0 1 0-1.7l-1.5-1.55 2-3.46 2.05.7a6.9 6.9 0 0 1 1.45-.84L10 3.5Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>          </button><span>Modifica</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.75a3.25 3.25 0 1 0 0 6.5a3.25 3.25 0 0 0 0-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" transform="translate(0.05 -0.31)"/><path d="M10 3.5h4l.55 2.1a6.9 6.9 0 0 1 1.45.84l2.05-.7 2 3.46-1.5 1.55a6.8 6.8 0 0 1 0 1.7l1.5 1.55-2 3.46-2.05-.7a6.9 6.9 0 0 1-1.45.84L14 19.7h-4l-.55-2.1A6.9 6.9 0 0 1 8 16.76l-2.05.7-2-3.46 1.5-1.55a6.8 6.8 0 0 1 0-1.7l-1.5-1.55 2-3.46 2.05.7a6.9 6.9 0 0 1 1.45-.84L10 3.5Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>          </button><span>Modifica</span>
         </div>
         <div class="icon-action">
           <button id="openQR" class="icon-button" type="button" aria-label="Mostra QR Code" title="Mostra QR Code">
@@ -264,7 +275,6 @@
           </button><span>QR Code</span>
         </div>
       </div>
-      <p class="footnote">Biglietto da visita digitale</p>
     </section>
   </main>
 
@@ -275,6 +285,16 @@
       <div id="qrcode"><p>Generazione QR Code...</p></div>
       <p id="qrContactName"></p>
       <button id="closeQR" class="qr-close" type="button">Chiudi</button>
+    </div>
+  </div>
+
+  <div id="mapsOverlay" class="maps-overlay" hidden>
+    <div class="maps-modal" role="dialog" aria-modal="true" aria-labelledby="mapsTitle">
+      <h2 id="mapsTitle">Apri indicazioni</h2>
+        <p>Scegli il navigatore che preferisci.</p>
+        <button id="appleMapsButton" type="button">Apple Maps</button>
+        <button id="googleMapsButton" type="button">Google Maps</button>
+        <button id="cancelMapsButton" type="button">Annulla</button>
     </div>
   </div>
 
@@ -421,15 +441,58 @@
       if (profile.postalCode) cityParts.push(profile.postalCode);
       if (profile.city) cityParts.push(profile.city);
       if (cityParts.length) addressParts.push(cityParts.join(" "));
-      setText("displayAddress", addressParts.join(" · "));
-      setOptionalVisibility("addressRow", addressParts.length > 0);
-
+      const addressElement = getField("displayAddress");
+      const indirizzo = addressParts.join(" - ");
+      addressElement.textContent = indirizzo;
+      addressElement.href = "#";
+      setOptionalVisibility("displayAddress", addressParts.length > 0);
       setWebsiteButton("displayWebsiteLine", profile.website, "L'Azienda");
       setWebsiteButton("displayWebsiteLine2", profile.website2, "Fondazione Salvatore Maugeri");
       getField("displayPdfLine").onclick = () => window.open("company_profile.pdf", "_blank", "noopener,noreferrer");
       document.title = fullName + " | Biglietto da visita";
     }
-
+    
+    const mapsOverlay = getField("mapsOverlay");
+    function apriNavigatore(tipo) {
+        if (!profile) return;
+        const parti = [
+            profile.street,
+            profile.postalCode,
+            profile.city,
+            "Italia"
+        ].filter(Boolean);
+        const destinazione = encodeURIComponent(parti.join(", "));
+        const url = tipo === "apple"
+            ? "https://maps.apple.com/?daddr=" + destinazione
+            : "https://www.google.com/maps/dir/?api=1&destination=" +
+              destinazione;
+        mapsOverlay.hidden = true;
+        window.location.href = url;
+    }
+    getField("displayAddress").addEventListener("click", function (event) {
+        event.preventDefault();
+        mapsOverlay.hidden = false;
+    });
+    getField("appleMapsButton").addEventListener("click", function () {
+        apriNavigatore("apple");
+    });
+    getField("googleMapsButton").addEventListener("click", function () {
+        apriNavigatore("google");
+    });
+    getField("cancelMapsButton").addEventListener("click", function () {
+        mapsOverlay.hidden = true;
+    });
+    mapsOverlay.addEventListener("click", function (event) {
+        if (event.target === mapsOverlay) {
+            mapsOverlay.hidden = true;
+        }
+    });
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            mapsOverlay.hidden = true;
+        }
+    });
+    
     form.addEventListener("submit", event => {
       event.preventDefault();
       formError.hidden = true;
