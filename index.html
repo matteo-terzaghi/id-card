@@ -259,6 +259,11 @@
         </button>
       </div>
 
+      <button id="saveSharedContact" class="action-button" type="button" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
+        <span>Salva contatto</span>
+      </button>
+      
       <div class="icon-actions">
         <div class="icon-action">
           <button id="shareContact" class="icon-button" type="button" aria-label="Condividi contatto" title="Condividi contatto">
@@ -684,6 +689,7 @@
     document.getElementById("openShareQR").addEventListener("click", showShareQRCode);
     document.getElementById("closeShareQR").addEventListener("click", closeShareQRCode);
     document.getElementById("shareOverlay").addEventListener("click", e => { if(e.target === document.getElementById("shareOverlay")){closeShareQRCode();}});
+    document.getElementById("saveSharedContact").addEventListener("click", addToContacts);
 
     function loadSharedProfile() {
       const params = new URLSearchParams(window.location.search);
@@ -701,6 +707,7 @@
       profile = sharedProfile;
       showCard();
       document.querySelector("#editProfile").closest(".icon-action").hidden = true;
+      document.getElementById("saveSharedContact").hidden = false;
     } else {
       profile = loadProfile();
       if (profile) { showCard(); } else { showSetup(null); }
