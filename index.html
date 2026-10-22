@@ -608,39 +608,41 @@
     
     async function addToContacts() {
       if (!profile) return;
-      const vcard = createVCard();
-      const filename = contactFilename();
+    
+      if (/Android/i.test(navigator.userAgent)) {
+        const extras = [
+          ["name", `${profile.firstName} ${profile.lastName}`],
+          ["phone", profile.mobile || profile.workPhone],
+          ["email", profile.email],
+          ["company", "Istituti Clinici Scientifici Maugeri SpA Società Benefit"],
+          ["job_title", profile.role]
+        ];
+        const params = extras
+          .filter(([, value]) => Boolean(value))
+          .map(([key, value]) =>
+            `S.${key}=${encodeURIComponent(value)}`
+          )
+          .join(";");
+        const intent =
+          `intent://contacts/people/#Intent;` +
+          `action=android.intent.action.INSERT;` +
+          `type=vnd.android.cursor.dir/contact;` +
+          `${params};end`;
+        window.location.href = intent;
+        return;
+      }
+  
       try {
-        if (
-          navigator.share &&
-          navigator.canShare &&
-          typeof File !== "undefined"
-        ) {
-          const file = new File(
-            [vcard],
-            filename,
-            { type: "text/vcard" }
-          );
-          if (navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              files: [file],
-              title: "Aggiungi contatto",
-            });
-            return;
-          }
-        }
-        alert(
-          "Il tuo browser non permette di aprire direttamente " +
-          "la schermata di aggiunta contatto. " +
-          "Apri questa pagina in Safari o Chrome e riprova."
+        const blob = new Blob(
+          [createVCard()],
+          { type: "text/vcard;charset=utf-8" }
         );
+        const url = URL.createObjectURL(blob);
+        window.location.href = url;
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
       } catch (error) {
-        if (error.name === "AbortError") return;
         console.error("Errore durante l'apertura del contatto:", error);
-        alert(
-          "Non è stato possibile aprire il contatto. " +
-          "Riprova utilizzando il browser del telefono."
-        );
+        alert("Impossibile aprire il contatto. Riprova.");
       }
     }
     
