@@ -259,10 +259,11 @@
         </button>
       </div>
 
-      <button id="saveSharedContact" class="action-button" type="button" hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
-        <span>Salva contatto</span>
-      </button>
+      <div class="icon-action">
+        <button id="addContactBtn" class="icon-button" type="button" aria-label="Salva contatto">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+        </button><span>Salva contatto</span>
+      </div>
       
       <div class="icon-actions">
         <div class="icon-action">
@@ -278,12 +279,12 @@
         <div class="icon-action">
           <button id="openQR" class="icon-button" type="button" aria-label="Mostra QR Code" title="Mostra QR Code">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"></rect><rect x="5" y="5" width="2" height="2"></rect><rect x="15" y="3" width="6" height="6" rx="1"></rect><rect x="17" y="5" width="2" height="2"></rect><rect x="3" y="15" width="6" height="6" rx="1"></rect><rect x="5" y="17" width="2" height="2"></rect><path d="M13 13h2v2h-2zM17 13h4M17 17h2v4M13 18h2v3M20 19h1"></path></svg>
-          </button><span>Condividi scheda contatto</span>
+          </button><span>Scheda contatto</span>
         </div>
         <div class="icon-action">
-          <button id="openShareQR" class="icon-button" type="button" aria-label="Condividi biglietto"  title="Condividi biglietto">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><rect x="4" y="18" width="16" height="3" rx="1"></rect></svg>
-          </button><span>Condividi biglietto da visita</span>
+          <button id="openShareQR" class="icon-button" type="button" aria-label="Condividi biglietto" title="Condividi biglietto">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"></rect><rect x="5" y="5" width="2" height="2"></rect><rect x="15" y="3" width="6" height="6" rx="1"></rect><rect x="17" y="5" width="2" height="2"></rect><rect x="3" y="15" width="6" height="6" rx="1"></rect><rect x="5" y="17" width="2" height="2"></rect><path d="M13 13h2v2h-2zM17 13h4M17 17h2v4M13 18h2v3M20 19h1"></path></svg>
+          </button><span>Condividi biglietto</span>
         </div>
       </div>
     </section>
@@ -691,6 +692,8 @@
     document.getElementById("closeShareQR").addEventListener("click", closeShareQRCode);
     document.getElementById("shareOverlay").addEventListener("click", e => { if(e.target === document.getElementById("shareOverlay")){closeShareQRCode();}});
     document.getElementById("saveSharedContact").addEventListener("click", addToContacts);
+    getField("addContactBtn").addEventListener("click", addToContacts);
+
 
     function loadSharedProfile() {
       const params = new URLSearchParams(window.location.search);
