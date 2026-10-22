@@ -1,1305 +1,569 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#F2F2F7">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Biglietto da visita digitale</title>
-    <link rel="apple-touch-icon" href="logo_app.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --background: #f2f2f2;
-            --card: rgb(55, 111, 128);
-            --button: rgb(157, 190, 199);
-            --white: #ffffff;
-            --text-dark: #263b42;
-            --muted: #64757a;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        [hidden] {
-            display: none !important;
-        }
-        html {
-            min-height: 100%;
-        }
-        body {
-            min-height: 100svh;
-            background: var(--background);
-            font-family: "PT Sans", sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding:
-                max(30px, env(safe-area-inset-top))
-                20px
-                max(30px, env(safe-area-inset-bottom));
-            color: var(--text-dark);
-        }
-        button,
-        input,
-        textarea {
-            font: inherit;
-        }
-        button {
-            -webkit-tap-highlight-color: transparent;
-        }
-        .wrapper {
-            width: 100%;
-            max-width: 430px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: auto;
-        }
-        .logo {
-            display: block;
-            width: 300px;
-            max-width: 85%;
-            height: auto;
-            object-fit: contain;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.10));
-        }
-        .card {
-            width: 100%;
-            padding: 34px 30px 30px;
-            border-radius: 28px;
-            background: var(--card);
-            color: var(--white);
-            border: 1px solid rgba(255, 255, 255, 0.38);
-            box-shadow:
-                0 50px 80px rgba(0, 0, 0, 0.20),
-                0 15px 30px rgba(0, 0, 0, 0.16),
-                0 10px 10px rgba(0, 0, 0, 0.10),
-                inset 0 1px 0 rgba(255, 255, 255, 0.20);
-        }
-        .name {
-            font-size: 32px;
-            line-height: 1.1;
-            font-weight: 700;
-            letter-spacing: -0.4px;
-            overflow-wrap: anywhere;
-        }
-        .role {
-            margin-top: 7px;
-            font-size: 18px;
-            line-height: 1.3;
-            color: rgba(255, 255, 255, 0.92);
-            white-space: pre-line;
-        }
-        .department {
-            margin-top: 4px;
-            font-size: 16px;
-            line-height: 1.4;
-            color: rgba(255, 255, 255, 0.72);
-            white-space: pre-line;
-        }
-        .separator {
-            height: 1px;
-            margin: 25px 0;
-            background: rgba(255, 255, 255, 0.25);
-        }
-        .contacts {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .contact {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            font-size: 16px;
-            line-height: 1.4;
-            min-width: 0;
-        }
-        .label {
-            width: 72px;
-            flex-shrink: 0;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.65);
-        }
-        .value {
-            color: var(--white);
-            text-decoration: none;
-            overflow-wrap: anywhere;
-            min-width: 0;
-        }
-        a.value:active,
-        .website:active {
-            opacity: 0.65;
-        }
-        .company {
-            font-size: 13px;
-            line-height: 1.4;
-            font-weight: 700;
-            overflow-wrap: anywhere;
-        }
-        .address {
-            margin-top: 4px;
-            font-size: 12px;
-            line-height: 1.5;
-            color: rgba(255, 255, 255, 0.75);
-            overflow-wrap: anywhere;
-        }
-        .website {
-            color: var(--white);
-            text-decoration: none;
-        }
-        .buttons {
-            width: 100%;
-            display: flex;
-            gap: 12px;
-            margin-top: 0px;
-        }
-        .action-button {
-            flex: 1;
-            min-width: 0;
-            min-height: 52px;
-            padding: 10px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.32);
-            border-radius: 18px;
-            background: var(--button);
-            color: var(--white);
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            gap: 7px;
-            box-shadow:
-                0 18px 30px rgba(0, 0, 0, 0.14),
-                0 6px 10px rgba(0, 0, 0, 0.10),
-                inset 0 1px 0 rgba(255, 255, 255, 0.18);
-            transition: transform 0.15s ease, opacity 0.15s ease;
-        }
-        .action-button:active {
-            transform: scale(0.97);
-        }
-        .secondary-button {
-            background: #e4e8e9;
-            color: #365762;
-            border-color: rgba(55, 111, 128, 0.15);
-        }
-        .footnote {
-            margin-top: 16px;
-            font-size: 12px;
-            color: #7a8588;
-            text-align: center;
-        }
-        /* Configurazione iniziale */
-        .setup-heading {
-            width: 100%;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .setup-heading h1 {
-            font-size: 26px;
-            line-height: 1.2;
-            color: #263b42;
-            margin-bottom: 7px;
-        }
-        .setup-heading p {
-            color: #657579;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        .form-card {
-            width: 100%;
-            padding: 28px 24px;
-            border-radius: 28px;
-            background: var(--card);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.38);
-            box-shadow:
-                0 35px 60px rgba(0, 0, 0, 0.20),
-                0 12px 24px rgba(0, 0, 0, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.20);
-        }
-        .form-card h2 {
-            font-size: 23px;
-            margin-bottom: 6px;
-        }
-        .form-description {
-            font-size: 13px;
-            line-height: 1.5;
-            color: rgba(255, 255, 255, 0.75);
-            margin-bottom: 22px;
-        }
-        .field {
-            margin-bottom: 15px;
-        }
-        .field label {
-            display: block;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: rgba(255, 255, 255, 0.95);
-        }
-        .field input,
-        .field textarea {
-            width: 100%;
-            min-height: 46px;
-            padding: 12px 13px;
-            border: 1px solid rgba(255, 255, 255, 0.28);
-            border-radius: 13px;
-            outline: none;
-            background: rgba(255, 255, 255, 0.96);
-            color: #263b42;
-            font-size: 15px;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
-        }
-        .field textarea {
-            min-height: 76px;
-            resize: vertical;
-        }
-        .field input:focus,
-        .field textarea:focus {
-            border-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.20);
-        }
-        .field input::placeholder,
-        .field textarea::placeholder {
-            color: #8b999d;
-        }
-        .section-title {
-            margin: 23px 0 14px;
-            padding-top: 19px;
-            border-top: 1px solid rgba(255, 255, 255, 0.25);
-            font-size: 16px;
-            font-weight: 700;
-        }
-        .required-note {
-            font-size: 12px;
-            line-height: 1.5;
-            color: rgba(255, 255, 255, 0.75);
-            margin-bottom: 18px;
-        }
-        .form-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 22px;
-        }
-        .form-actions .action-button {
-            width: 100%;
-        }
-        .error-message {
-            font-size: 13px;
-            line-height: 1.5;
-            color: #fff0c7;
-            margin-top: 12px;
-        }
-        /* Finestra QR */
-        .qr-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-        }
-        .qr-overlay.visible {
-            display: flex;
-        }
-        .qr-modal {
-            width: 100%;
-            max-width: 340px;
-            max-height: 90svh;
-            overflow-y: auto;
-            padding: 28px 22px;
-            border-radius: 26px;
-            background: #f2f2f2;
-            color: #263b42;
-            text-align: center;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-        }
-        .qr-modal h2 {
-            font-size: 23px;
-            margin-bottom: 8px;
-        }
-        .qr-modal p {
-            font-size: 14px;
-            line-height: 1.5;
-            color: #5e6c70;
-            margin-bottom: 18px;
-            overflow-wrap: anywhere;
-        }
-        #qrcode {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 240px;
-            margin: 0 auto 18px;
-        }
-        #qrcode img {
-            width: 240px;
-            max-width: 100%;
-            height: auto;
-            border-radius: 6px;
-        }
-        .qr-close {
-            width: 100%;
-            min-height: 48px;
-            border: none;
-            border-radius: 15px;
-            background: var(--card);
-            color: white;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        @media (max-width: 380px) {
-            body {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-            .logo {
-                width: 220px;
-                margin-bottom: 17px;
-            }
-            .card {
-                padding: 28px 22px 25px;
-                border-radius: 24px;
-            }
-            .name {
-                font-size: 29px;
-            }
-            .role {
-                font-size: 17px;
-            }
-            .contact {
-                font-size: 14px;
-                gap: 7px;
-            }
-            .label {
-                width: 66px;
-                font-size: 13px;
-            }
-            .buttons {
-                gap: 8px;
-                margin-top: 0px;
-            }
-            .action-button {
-                min-height: 48px;
-                border-radius: 15px;
-                font-size: 12px;
-                padding: 9px 7px;
-            }
-            .form-card {
-                padding: 23px 19px;
-            }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                transition: none !important;
-                scroll-behavior: auto !important;
-            }
-        }
-        .icon-actions {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            margin-top: 14px;
-        }
-        .icon-button {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(55, 111, 128, 0.18);
-            border-radius: 16px;
-            background: #e4e8e9;
-            color: #365762;
-            cursor: pointer;
-            box-shadow:
-                0 8px 16px rgba(0, 0, 0, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            transition: transform 0.15s ease, opacity 0.15s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .icon-button svg {
-            width: 23px;
-            height: 23px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.8;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        .icon-button:active {
-            transform: scale(0.92);
-            opacity: 0.7;
-        }
-        .icon-button:focus-visible {
-            outline: 2px solid var(--card);
-            outline-offset: 3px;
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .icon-button {
-                transition: none;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F2F6F7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Biglietto da visita digitale</title>
+  <link rel="apple-touch-icon" href="logo_app.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --page: #F2F6F7;
+      --paper: #FFFFFF;
+      --teal: #285967;
+      --teal-deep: #214D59;
+      --teal-soft: #367F8F;
+      --sky: #9DC6CE;
+      --sky-pale: #DCECEF;
+      --ink: #263B42;
+      --muted: #64777D;
+      --line: #DCE6E9;
+      --shadow: 0 18px 42px rgba(31, 68, 78, .12);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+    html { min-height: 100%; }
+    body {
+      min-height: 100svh;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(157,198,206,.22), transparent 42%),
+        var(--page);
+      color: var(--ink);
+      font-family: "PT Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: max(28px, env(safe-area-inset-top)) 18px max(30px, env(safe-area-inset-bottom));
+    }
+    button, input, textarea { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    .wrapper { width: 100%; max-width: 430px; margin: auto; display: flex; flex-direction: column; align-items: center; }
+    .logo {
+      display: block; width: 280px; max-width: 82%; height: auto; object-fit: contain;
+      margin: 0 auto 22px; filter: drop-shadow(0 3px 5px rgba(38,59,66,.08));
+    }
+    .card {
+      width: 100%; overflow: hidden; color: #fff; position: relative;
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, #2D6878 0%, #285967 48%, #214D59 100%);
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: var(--shadow), 0 5px 12px rgba(31,68,78,.07);
+    }
+    .card-main { padding: 30px 25px 27px; }
+    .identity { padding-bottom: 22px; border-bottom: 1px solid rgba(220,236,239,.42); }
+    .name { font-size: clamp(28px, 7.5vw, 34px); line-height: 1.08; letter-spacing: -.55px; font-weight: 700; overflow-wrap: anywhere; }
+    .role { margin-top: 10px; font-size: 18px; line-height: 1.32; color: #fff; white-space: pre-line; }
+    .department { margin-top: 4px; font-size: 15px; line-height: 1.4; color: #C8DADF; white-space: pre-line; }
+    .contacts { display: flex; flex-direction: column; gap: 19px; padding-top: 23px; }
+    .contact { display: flex; align-items: center; gap: 13px; min-width: 0; }
+    .contact-icon {
+      flex: 0 0 32px; width: 32px; height: 32px; display: grid; place-items: center;
+      color: #D5EDF1;
+    }
+    .contact-icon svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .contact-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .contact-label { color: #B8D1D7; font-size: 12px; line-height: 1.2; text-transform: uppercase; letter-spacing: .65px; }
+    .value { color: #fff; text-decoration: none; font-size: 15px; line-height: 1.35; overflow-wrap: anywhere; min-width: 0; }
+    .value:active { opacity: .68; }
+    .company-panel {
+      background: #F9FBFB; color: var(--ink); padding: 22px 25px 24px;
+      border-top: 1px solid rgba(255,255,255,.7);
+    }
+    .company { font-size: 14px; line-height: 1.45; font-weight: 700; overflow-wrap: anywhere; }
+    .fiscal { margin-top: 5px; font-size: 11px; line-height: 1.55; color: #65777C; overflow-wrap: anywhere; }
+    .address-row { display: flex; gap: 10px; align-items: flex-start; margin-top: 17px; color: #536D75; }
+    .address-row svg { width: 20px; height: 20px; flex: 0 0 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; margin-top: 1px; }
+    .address { font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+    .buttons { display: flex; flex-direction: column; gap: 9px; margin-top: 13px; }
+    .action-button {
+      width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 11px 15px; border: 1px solid transparent; border-radius: 15px;
+      background: var(--teal-soft); color: #fff; text-decoration: none;
+      font-size: 14px; font-weight: 700; text-align: center; cursor: pointer;
+      box-shadow: 0 5px 12px rgba(33,77,89,.10);
+      transition: transform .15s ease, opacity .15s ease, background .15s ease;
+    }
+    .action-button svg { width: 19px; height: 19px; flex: 0 0 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .action-button.light { background: #A8D2DA; color: #214D59; }
+    .action-button.outline { background: transparent; color: #285967; border-color: #C9DDE1; box-shadow: none; }
+    .action-button:active { transform: scale(.985); opacity: .8; }
+    .icon-actions { display: flex; justify-content: center; align-items: flex-start; gap: clamp(22px, 7vw, 36px); margin-top: 22px; }
+    .icon-action { display: flex; flex-direction: column; align-items: center; gap: 7px; color: #365F6B; font-size: 12px; }
+    .icon-button {
+      width: 54px; height: 54px; display: flex; align-items: center; justify-content: center;
+      border: 1px solid #C9E0E5; border-radius: 50%; background: rgba(255,255,255,.72); color: #2D6B7B;
+      box-shadow: 0 5px 13px rgba(31,68,78,.06); cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    .icon-button svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-button:active { transform: scale(.93); opacity: .72; }
+    .footnote { margin-top: 17px; font-size: 11px; color: #849398; text-align: center; }
+    /* Modulo di configurazione */
+    .setup-heading { width: 100%; text-align: center; margin-bottom: 18px; }
+    .setup-heading h1 { color: var(--teal-deep); font-size: 27px; line-height: 1.2; }
+    .setup-heading p { margin-top: 7px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .form-card {
+      width: 100%; padding: 25px 22px; background: var(--paper); border: 1px solid #E1EAEC;
+      border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .form-card h2 { font-size: 22px; color: var(--teal-deep); margin-bottom: 7px; }
+    .form-description { color: var(--muted); font-size: 13px; line-height: 1.5; margin-bottom: 20px; }
+    .section-title {
+      display: flex; align-items: center; gap: 9px; color: var(--teal-deep);
+      margin: 22px 0 14px; padding-top: 18px; border-top: 1px solid var(--line);
+      font-size: 15px; font-weight: 700;
+    }
+    .section-title.first { margin-top: 0; padding-top: 0; border-top: 0; }
+    .section-title svg { width: 19px; height: 19px; fill: none; stroke: var(--teal-soft); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; margin-bottom: 6px; color: #536D75; font-size: 12px; font-weight: 700; }
+    .field input, .field textarea {
+      width: 100%; min-height: 44px; padding: 11px 12px; border: 1px solid #D8E4E7;
+      border-radius: 11px; outline: none; background: #FBFDFD; color: var(--ink); font-size: 14px;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .field textarea { min-height: 70px; resize: vertical; }
+    .field input:focus, .field textarea:focus { border-color: #75B0BC; box-shadow: 0 0 0 3px rgba(117,176,188,.18); }
+    .field input:disabled, .field textarea:disabled { background: #F0F5F6; color: #61777D; opacity: 1; }
+    .field input::placeholder, .field textarea::placeholder { color: #98A8AC; }
+    .fixed-value { padding: 11px 12px; border-radius: 11px; background: #F0F5F6; color: #536D75; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+    .required-note { color: #7A8B90; font-size: 11px; line-height: 1.55; margin-top: 19px; }
+    .form-actions { display: flex; flex-direction: column; gap: 9px; margin-top: 20px; }
+    .form-actions .action-button { min-height: 49px; }
+    .secondary-button { background: #E8F0F2; color: #365F6B; border-color: #D9E6E9; box-shadow: none; }
+    .error-message { margin-top: 12px; color: #A23E35; font-size: 13px; line-height: 1.5; }
+    /* QR modal */
+    .qr-overlay {
+      position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center;
+      padding: 20px; background: rgba(22,46,53,.55); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+    }
+    .qr-overlay.visible { display: flex; }
+    .qr-modal {
+      width: 100%; max-width: 340px; max-height: 90svh; overflow-y: auto; padding: 26px 22px;
+      border-radius: 24px; background: #F8FBFB; color: var(--ink); text-align: center;
+      border: 1px solid rgba(255,255,255,.8); box-shadow: 0 25px 60px rgba(0,0,0,.28);
+    }
+    .qr-modal h2 { color: var(--teal-deep); font-size: 23px; margin-bottom: 8px; }
+    .qr-modal p { color: #62767C; font-size: 13px; line-height: 1.5; margin-bottom: 16px; overflow-wrap: anywhere; }
+    #qrcode { display: flex; justify-content: center; align-items: center; min-height: 240px; margin: 0 auto 16px; }
+    #qrcode img { width: 240px; max-width: 100%; height: auto; padding: 7px; border-radius: 10px; background: #fff; border: 1px solid #E0E9EB; }
+    .qr-close { width: 100%; min-height: 47px; border: 0; border-radius: 14px; background: var(--teal); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; }
+    @media (max-width: 380px) {
+      body { padding-left: 14px; padding-right: 14px; }
+      .logo { width: 230px; margin-bottom: 17px; }
+      .card-main { padding: 25px 20px 23px; }
+      .company-panel { padding: 19px 20px 21px; }
+      .name { font-size: 28px; }
+      .role { font-size: 17px; }
+      .value { font-size: 14px; }
+      .form-card { padding: 22px 18px; }
+      .icon-actions { gap: 22px; }
+      .icon-button { width: 50px; height: 50px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
+  </style>
 </head>
 <body>
-    <main class="wrapper">
-        <!-- LOGO: rimane esterno alla card -->
-        <img class="logo" src="logo.PNG" alt="Logo"
-             onerror="this.hidden=true">
-        <!-- CONFIGURAZIONE -->
-        <section id="setupView" class="form-card" hidden>
-            <h2 id="formTitle">Il tuo biglietto digitale</h2>
-            <p class="form-description">
-                Inserisci i tuoi dati per creare il tuo biglietto da visita.
-                Potrai modificarli in qualsiasi momento.
-            </p>
-            <form id="profileForm">
-                <p class="section-title" style="margin-top:0;padding-top:0;border-top:0">
-                    Dati personali
-                </p>
-                <div class="field">
-                    <label for="firstName">Nome *</label>
-                    <input id="firstName" name="firstName"
-                           autocomplete="given-name" required
-                           maxlength="80" disabled>
-                </div>
-                <div class="field">
-                    <label for="lastName">Cognome *</label>
-                    <input id="lastName" name="lastName"
-                           autocomplete="family-name" required
-                           maxlength="80" disabled>
-                </div>
-                <div class="field">
-                    <label for="role">Ruolo professionale *</label>
-                    <input id="role" name="role" required
-                           maxlength="150">
-                </div>
-                <div class="field">
-                    <label for="department">Dipartimento / Ufficio</label>
-                    <textarea id="department" name="department"
-                              maxlength="300" disabled></textarea>
-                </div>
-                <p class="section-title">Contatti</p>
-                <div class="field">
-                    <label for="workPhone">Telefono aziendale</label>
-                    <input id="workPhone" name="workPhone"
-                           type="tel" autocomplete="tel"
-                           maxlength="40">
-                </div>
-                <div class="field">
-                    <label for="mobile">Cellulare</label>
-                    <input id="mobile" name="mobile"
-                           type="tel" autocomplete="tel"
-                           maxlength="40">
-                </div>
-                <div class="field">
-                    <label for="email">E-mail</label>
-                    <input id="email" name="email"
-                           type="email" autocomplete="email"
-                           maxlength="150" disabled>
-                </div>
-                <p class="section-title">Azienda</p>
-                <div class="field">
-                    <label>Nome azienda</label>
-                    <p class="fixed-value">
-                        Istituti Clinici Scientifici Maugeri SpA Società Benefit | P.IVA: 02631650187 | C.F.: 02631650187 | SDI: MZO2A0U
-                    </p>
-                    <input type="hidden" id="company" name="company"
-                           value="Istituti Clinici Scientifici Maugeri SpA Società Benefit | P.IVA: 02631650187 | C.F.: 02631650187 | SDI: MZO2A0U">
-                </div>
-                <div class="field">
-                    <label for="street">Indirizzo</label>
-                    <input id="street" name="street"
-                           autocomplete="street-address"
-                           maxlength="180" disabled>
-                </div>
-                <div class="field">
-                    <label for="city">Città</label>
-                    <input id="city" name="city"
-                           autocomplete="address-level2"
-                           maxlength="100" disabled>
-                </div>
-                <div class="field">
-                    <label for="postalCode">CAP</label>
-                    <input id="postalCode" name="postalCode"
-                           autocomplete="postal-code"
-                           maxlength="15" disabled>
-                </div>
-                <div class="field">
-                    <label>Sito web ICS Maugeri</label>
-                    <p class="fixed-value">www.icsmaugeri.it</p>
-                    <input type="hidden" id="website" name="website"
-                           value="www.icsmaugeri.it">
-                </div>
-                <div class="field">
-                    <label>Sito web Fondazione Salvatore Maugeri</label>
-                    <p class="fixed-value">www.fondazionesalvatoremaugeri.org</p>
-                    <input type="hidden" id="website2" name="website2"
-                           value="www.fondazionesalvatoremaugeri.org">
-                </div>
-                <p class="required-note">
-                    * Campi obbligatori. Gli altri dati sono facoltativi.
-                    Le informazioni vengono salvate nel browser di questo dispositivo.
-                </p>
-                <div class="form-actions">
-                    <button class="action-button" type="submit">
-                        Salva e visualizza biglietto
-                    </button>
-                    <button id="cancelEdit" class="action-button secondary-button"
-                            type="button" hidden>
-                        Annulla modifiche
-                    </button>
-                </div>
-                <p id="formError" class="error-message" role="alert" hidden></p>
-            </form>
-        </section>
-        <!-- BIGLIETTO -->
-        <section id="cardView" style="width:100%" hidden>
-            <article class="card">
-                <h1 id="displayName" class="name"></h1>
-                <p id="displayRole" class="role"></p>
-                <p id="displayDepartment" class="department"></p>
-                <div class="separator"></div>
-                <div id="displayContacts" class="contacts"></div>
-                <div id="companySeparator" class="separator"></div>
-                <section>
-                    <p id="displayCompany" class="company"></p>
-                    <p id="displayAddress" class="address"></p>
-                </section>
-            </article>
-            <div class="buttons" style="margin-top:20px">
-                <button id="displayWebsiteLine"
-                        class="action-button"
-                        type="button">
-                </button>
-            </div>
-            <div class="buttons">
-                <button id="displayWebsiteLine2"
-                        class="action-button"
-                        type="button">
-                </button>
-            </div>
-            <div class="buttons">
-                <button id="displayPdfLine"
-                        class="action-button"
-                        type="button">
-                </button>
-            </div>
-            <div class="icon-actions">
-                <button id="shareContact" class="icon-button"
-                        type="button" aria-label="Condividi contatto"
-                        title="Condividi contatto">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 16V3"></path>
-                        <path d="m7 8 5-5 5 5"></path>
-                        <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path>
-                    </svg>
-                </button>
-                <button id="editProfile" class="icon-button"
-                        type="button" aria-label="Modifica informazioni"
-                        title="Modifica informazioni">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="
-                                M19.4 13.5
-                                a7.7 7.7 0 0 0 0-3
-                                l1.5-1.2
-                                -1.5-2.6
-                                -1.8.7
-                                a7.2 7.2 0 0 0-2.6-1.5
-                                L14.7 4h-3.1l-.3 1.9
-                                a7.2 7.2 0 0 0-2.6 1.5
-                                l-1.8-.7-1.5 2.6
-                                1.5 1.2
-                                a7.7 7.7 0 0 0 0 3
-                                l-1.5 1.2
-                                1.5 2.6
-                                1.8-.7
-                                a7.2 7.2 0 0 0 2.6 1.5
-                                l.3 1.9h3.1l.3-1.9
-                                a7.2 7.2 0 0 0 2.6-1.5
-                                l1.8.7
-                                1.5-2.6z">
-                            </path>
-                            <circle cx="13.15" cy="12" r="3"></circle>
-                        </svg>
-                </button>
-                <button id="openQR" class="icon-button"
-                    type="button" aria-label="Mostra QR Code" title="Mostra QR Code">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <!-- angolo alto sinistra -->
-                        <rect x="3" y="3" width="5" height="5" rx="1"></rect>
-                        <rect x="4.5" y="4.5" width="2" height="2"></rect>
-                        <!-- angolo alto destra -->
-                        <rect x="16" y="3" width="5" height="5" rx="1"></rect>
-                        <rect x="17.5" y="4.5" width="2" height="2"></rect>
-                        <!-- angolo basso sinistra -->
-                        <rect x="3" y="16" width="5" height="5" rx="1"></rect>
-                        <rect x="4.5" y="17.5" width="2" height="2"></rect>
-                        <!-- moduli QR -->
-                        <rect x="11" y="11" width="2" height="2"></rect>
-                        <rect x="14" y="11" width="1.5" height="1.5"></rect>
-                        <rect x="11" y="14" width="1.5" height="1.5"></rect>
-                        <rect x="14" y="14" width="3" height="3"></rect>
-                        <rect x="18" y="12" width="2" height="2"></rect>
-                        <rect x="12" y="18" width="2" height="2"></rect>
-                    </svg>
-                </button>
-            </div>
-        </section>
-    </main>
-    <!-- MODALE QR CODE -->
-    <div id="qrOverlay" class="qr-overlay">
-        <div class="qr-modal" role="dialog" aria-modal="true"
-             aria-labelledby="qrTitle">
-            <h2 id="qrTitle">Aggiungi contatto</h2>
-            <p>
-                Inquadra il QR Code con la fotocamera
-                dello smartphone per importare il contatto.
-            </p>
-            <div id="qrcode">
-                <p>Generazione QR Code...</p>
-            </div>
-            <p id="qrContactName"></p>
-            <button id="closeQR" class="qr-close" type="button">
-                Chiudi
-            </button>
+  <main class="wrapper">
+    <img class="logo" src="logo.PNG" alt="Logo Maugeri" onerror="this.hidden=true">
+
+    <section id="setupView" class="form-card" hidden>
+      <h2 id="formTitle">Il tuo biglietto digitale</h2>
+      <p class="form-description">Inserisci i tuoi dati per creare il tuo biglietto da visita. Potrai modificarli in qualsiasi momento.</p>
+      <form id="profileForm">
+        <p class="section-title first">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"></path></svg>
+          Dati personali
+        </p>
+        <div class="field"><label for="firstName">Nome *</label><input id="firstName" name="firstName" autocomplete="given-name" required maxlength="80" disabled></div>
+        <div class="field"><label for="lastName">Cognome *</label><input id="lastName" name="lastName" autocomplete="family-name" required maxlength="80" disabled></div>
+        <div class="field"><label for="role">Ruolo professionale *</label><input id="role" name="role" required maxlength="150"></div>
+        <div class="field"><label for="department">Dipartimento / Ufficio</label><textarea id="department" name="department" maxlength="300" disabled></textarea></div>
+
+        <p class="section-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+          Contatti
+        </p>
+        <div class="field"><label for="workPhone">Telefono aziendale</label><input id="workPhone" name="workPhone" type="tel" autocomplete="tel" maxlength="40" placeholder="Es. 0382 12 34 345"></div>
+        <div class="field"><label for="mobile">Cellulare</label><input id="mobile" name="mobile" type="tel" autocomplete="tel" maxlength="40" placeholder="Es. 345 67 89 123"></div>
+        <div class="field"><label for="email">E-mail</label><input id="email" name="email" type="email" autocomplete="email" maxlength="150" disabled></div>
+
+        <p class="section-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V5l7-3 7 3v16M9 8h1M14 8h1M9 12h1M14 12h1M10 21v-5h4v5"></path></svg>
+          Azienda
+        </p>
+        <div class="field"><label>Nome azienda e dati fiscali</label><p class="fixed-value">Istituti Clinici Scientifici Maugeri SpA Società Benefit | P.IVA: 02631650187 | C.F.: 02631650187 | SDI: MZO2A0U</p><input type="hidden" id="company" name="company" value="Istituti Clinici Scientifici Maugeri SpA Società Benefit | P.IVA: 02631650187 | C.F.: 02631650187 | SDI: MZO2A0U"></div>
+        <div class="field"><label for="street">Indirizzo</label><input id="street" name="street" autocomplete="street-address" maxlength="180" disabled></div>
+        <div class="field"><label for="city">Città</label><input id="city" name="city" autocomplete="address-level2" maxlength="100" disabled></div>
+        <div class="field"><label for="postalCode">CAP</label><input id="postalCode" name="postalCode" autocomplete="postal-code" maxlength="15" disabled></div>
+        <div class="field"><label>Sito web ICS Maugeri</label><p class="fixed-value">www.icsmaugeri.it</p><input type="hidden" id="website" name="website" value="www.icsmaugeri.it"></div>
+        <div class="field"><label>Sito web Fondazione Salvatore Maugeri</label><p class="fixed-value">www.fondazionesalvatoremaugeri.org</p><input type="hidden" id="website2" name="website2" value="www.fondazionesalvatoremaugeri.org"></div>
+        <p class="required-note">* Campi obbligatori. Gli altri dati sono facoltativi. Le informazioni vengono salvate nel browser di questo dispositivo.</p>
+        <div class="form-actions">
+          <button class="action-button" type="submit">Salva e visualizza biglietto</button>
+          <button id="cancelEdit" class="action-button secondary-button" type="button" hidden>Annulla modifiche</button>
         </div>
+        <p id="formError" class="error-message" role="alert" hidden></p>
+      </form>
+    </section>
+
+    <section id="cardView" style="width:100%" hidden>
+      <article class="card">
+        <div class="card-main">
+          <header class="identity">
+            <h1 id="displayName" class="name"></h1>
+            <p id="displayRole" class="role"></p>
+            <p id="displayDepartment" class="department"></p>
+          </header>
+          <div id="displayContacts" class="contacts"></div>
+        </div>
+        <section class="company-panel">
+          <p id="displayCompany" class="company"></p>
+          <p id="displayFiscal" class="fiscal"></p>
+          <div class="address-row" id="addressRow">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+            <p id="displayAddress" class="address"></p>
+          </div>
+        </section>
+      </article>
+
+      <div class="buttons">
+        <button id="displayWebsiteLine" class="action-button" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg>
+          <span>L'Azienda</span>
+        </button>
+        <button id="displayWebsiteLine2" class="action-button light" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg>
+          <span>Fondazione Salvatore Maugeri</span>
+        </button>
+        <button id="displayPdfLine" class="action-button outline" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v5h5M9 13h6M9 17h6"></path></svg>
+          <span>Company Profile Maugeri</span>
+        </button>
+      </div>
+
+      <div class="icon-actions">
+        <div class="icon-action">
+          <button id="shareContact" class="icon-button" type="button" aria-label="Condividi contatto" title="Condividi contatto">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"></circle><circle cx="6" cy="12" r="2.5"></circle><circle cx="18" cy="19" r="2.5"></circle><path d="m8.2 10.8 7.5-4.5M8.2 13.2l7.5 4.5"></path></svg>
+          </button><span>Condividi</span>
+        </div>
+        <div class="icon-action">
+          <button id="editProfile" class="icon-button" type="button" aria-label="Modifica informazioni" title="Modifica informazioni">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"></path><path d="m19.4 15 .1.1 1.2.9-1.6 2.8-1.4-.6a8 8 0 0 1-1.8 1l-.2 1.5h-3.2l-.2-1.5a8 8 0 0 1-1.8-1l-1.4.6-1.6-2.8 1.2-.9a7 7 0 0 1 0-2.1l-1.2-.9 1.6-2.8 1.4.6a8 8 0 0 1 1.8-1l.2-1.5h3.2l.2 1.5a8 8 0 0 1 1.8 1l1.4-.6 1.6 2.8-1.2.9a7 7 0 0 1 0 2Z" transform="translate(-1 -1) scale(.98)"></path></svg>
+          </button><span>Modifica</span>
+        </div>
+        <div class="icon-action">
+          <button id="openQR" class="icon-button" type="button" aria-label="Mostra QR Code" title="Mostra QR Code">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"></rect><rect x="5" y="5" width="2" height="2"></rect><rect x="15" y="3" width="6" height="6" rx="1"></rect><rect x="17" y="5" width="2" height="2"></rect><rect x="3" y="15" width="6" height="6" rx="1"></rect><rect x="5" y="17" width="2" height="2"></rect><path d="M13 13h2v2h-2zM17 13h4M17 17h2v4M13 18h2v3M20 19h1"></path></svg>
+          </button><span>QR Code</span>
+        </div>
+      </div>
+      <p class="footnote">Biglietto da visita digitale</p>
+    </section>
+  </main>
+
+  <div id="qrOverlay" class="qr-overlay">
+    <div class="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+      <h2 id="qrTitle">Aggiungi contatto</h2>
+      <p>Inquadra il QR Code con la fotocamera dello smartphone per importare il contatto.</p>
+      <div id="qrcode"><p>Generazione QR Code...</p></div>
+      <p id="qrContactName"></p>
+      <button id="closeQR" class="qr-close" type="button">Chiudi</button>
     </div>
-    <script>
-        "use strict";
-        const STORAGE_KEY = "bigliettoDigitale.profilo.v1";
-        const fields = [
-            "firstName",
-            "lastName",
-            "role",
-            "department",
-            "workPhone",
-            "mobile",
-            "email",
-            "company",
-            "street",
-            "city",
-            "postalCode",
-            "website",
-            "website2"
-        ];
-        const DEFAULT_VALUES = {
-            company: "Istituti Clinici Scientifici Maugeri SpA Società Benefit | P.IVA: 02631650187 | C.F.: 02631650187 | SDI: MZO2A0U",
-            website: "www.icsmaugeri.it",
-            website2: "www.fondazionesalvatoremaugeri.org"
-        };
-        const form = document.getElementById("profileForm");
-        const setupView = document.getElementById("setupView");
-        const cardView = document.getElementById("cardView");
-        const formError = document.getElementById("formError");
-        const cancelEdit = document.getElementById("cancelEdit");
-        let profile = null;
-        let editing = false;
-        let qrRequestId = 0;
-        let currentQRUrl = null;
-        function getField(id) {
-            return document.getElementById(id);
+  </div>
+
+  <script>
+    "use strict";
+    const STORAGE_KEY = "bigliettoDigitale.profilo.v1";
+    const fields = ["firstName","lastName","role","department","workPhone","mobile","email","company","street","city","postalCode","website","website2"];
+    const DEFAULT_VALUES = {
+      company: "Istituti Clinici Scientifici Maugeri SpA Società Benefit | P.IVA: 02631650187 | C.F.: 02631650187 | SDI: MZO2A0U",
+      website: "www.icsmaugeri.it",
+      website2: "www.fondazionesalvatoremaugeri.org"
+    };
+    const form = document.getElementById("profileForm");
+    const setupView = document.getElementById("setupView");
+    const cardView = document.getElementById("cardView");
+    const formError = document.getElementById("formError");
+    const cancelEdit = document.getElementById("cancelEdit");
+    let profile = null;
+    let qrRequestId = 0;
+    let currentQRUrl = null;
+
+    const ICONS = {
+      phone: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h4l2 5-3 2a15 15 0 0 0 5 5l2-3 5 2v4c0 1-1 2-2 2C10 20 4 14 4 5c0-1 1-2 2-2Z"></path></svg>',
+      mobile: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2"></rect><path d="M10 5h4M11 18.5h2"></path></svg>',
+      email: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"></rect><path d="m3.5 6 8.5 7 8.5-7"></path></svg>'
+    };
+    function getField(id) { return document.getElementById(id); }
+    function setText(id, value) { getField(id).textContent = value || ""; }
+    function setOptionalVisibility(id, visible) { getField(id).hidden = !visible; }
+
+    function formattaTelefono(numero, tipo) {
+      if (!numero) return "";
+      let cifre = numero.replace(/\D/g, "");
+      if (cifre.startsWith("39") && (cifre.length === 12 || cifre.length === 13)) cifre = cifre.substring(2);
+      if (tipo === "fisso" && cifre.length === 10) return "+39 " + cifre.replace(/^(\d{4})(\d{2})(\d{2})(\d{2})$/, "$1 $2 $3 $4");
+      if (tipo === "fisso" && cifre.length === 11) return "+39 " + cifre.replace(/^(\d{4})(\d{2})(\d{2})(\d{3})$/, "$1 $2 $3 $4");
+      if (tipo === "mobile" && cifre.length === 10) return "+39 " + cifre.replace(/^(\d{3})(\d{2})(\d{2})(\d{3})$/, "$1 $2 $3 $4");
+      return numero;
+    }
+    function normalizeProfile(data) {
+      const normalized = {};
+      fields.forEach(key => normalized[key] = String(data[key] || "").trim());
+      return normalized;
+    }
+    function loadProfile() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
+        if (!parsed || typeof parsed !== "object") return null;
+        const normalized = normalizeProfile(parsed);
+        if (!normalized.firstName || !normalized.lastName || !normalized.role || !normalized.company) return null;
+        return normalized;
+      } catch (error) {
+        console.error("Impossibile leggere i dati salvati:", error);
+        return null;
+      }
+    }
+    function saveProfile(data) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); return true; }
+      catch (error) { console.error("Impossibile salvare i dati:", error); return false; }
+    }
+    function getUrlParameter(name) { return new URLSearchParams(window.location.search).get(name) || ""; }
+
+    function showSetup(data) {
+      const params = {};
+      fields.forEach(key => params[key] = getUrlParameter(key));
+      fields.forEach(key => {
+        const field = getField(key);
+        if (!field) return;
+        if (params[key]) field.value = params[key];
+        else if (data) field.value = data[key] || DEFAULT_VALUES[key] || "";
+        else field.value = DEFAULT_VALUES[key] || "";
+      });
+      getField("formTitle").textContent = data ? "Modifica il tuo biglietto" : "Il tuo biglietto digitale";
+      cancelEdit.hidden = !data;
+      cardView.hidden = true;
+      setupView.hidden = false;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function showCard() {
+      setupView.hidden = true;
+      cardView.hidden = false;
+      renderCard();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function normalizeWebsite(value) {
+      if (!value) return "";
+      let website = value.trim();
+      if (!/^https?:\/\//i.test(website)) website = "https://" + website;
+      try {
+        const url = new URL(website);
+        return (url.protocol === "https:" || url.protocol === "http:") ? url.href : "";
+      } catch { return ""; }
+    }
+    function createContactRow(label, value, href, icon) {
+      const row = document.createElement("div");
+      row.className = "contact";
+      const iconEl = document.createElement("span");
+      iconEl.className = "contact-icon";
+      iconEl.innerHTML = ICONS[icon];
+      const copy = document.createElement("div");
+      copy.className = "contact-copy";
+      const labelEl = document.createElement("span");
+      labelEl.className = "contact-label";
+      labelEl.textContent = label;
+      const link = document.createElement("a");
+      link.className = "value";
+      link.textContent = value;
+      link.href = href;
+      copy.append(labelEl, link);
+      row.append(iconEl, copy);
+      return row;
+    }
+    function setWebsiteButton(id, value, label) {
+      const button = getField(id);
+      button.hidden = !normalizeWebsite(value);
+      button.onclick = () => {
+        const url = normalizeWebsite(value);
+        if (url) window.open(url, "_blank", "noopener,noreferrer");
+      };
+      const span = button.querySelector("span");
+      if (span) span.textContent = label;
+    }
+    function renderCard() {
+      if (!profile) return;
+      const fullName = profile.firstName + " " + profile.lastName;
+      setText("displayName", fullName);
+      setText("displayRole", profile.role);
+      setText("displayDepartment", profile.department);
+      setText("displayCompany", "Istituti Clinici Scientifici Maugeri SpA Società Benefit");
+      setText("displayFiscal", "P.IVA: 02631650187  |  C.F.: 02631650187  |  SDI: MZO2A0U");
+      setOptionalVisibility("displayDepartment", Boolean(profile.department));
+
+      const contacts = getField("displayContacts");
+      contacts.replaceChildren();
+      if (profile.workPhone) contacts.appendChild(createContactRow("Telefono aziendale", formattaTelefono(profile.workPhone, "fisso"), "tel:" + profile.workPhone.replace(/[^\d+]/g, ""), "phone"));
+      if (profile.mobile) contacts.appendChild(createContactRow("Cellulare", formattaTelefono(profile.mobile, "mobile"), "tel:" + profile.mobile.replace(/[^\d+]/g, ""), "mobile"));
+      if (profile.email) contacts.appendChild(createContactRow("E-mail", profile.email, "mailto:" + profile.email, "email"));
+
+      const addressParts = [];
+      if (profile.street) addressParts.push(profile.street);
+      const cityParts = [];
+      if (profile.postalCode) cityParts.push(profile.postalCode);
+      if (profile.city) cityParts.push(profile.city);
+      if (cityParts.length) addressParts.push(cityParts.join(" "));
+      setText("displayAddress", addressParts.join(" · "));
+      setOptionalVisibility("addressRow", addressParts.length > 0);
+
+      setWebsiteButton("displayWebsiteLine", profile.website, "L'Azienda");
+      setWebsiteButton("displayWebsiteLine2", profile.website2, "Fondazione Salvatore Maugeri");
+      getField("displayPdfLine").onclick = () => window.open("company_profile.pdf", "_blank", "noopener,noreferrer");
+      document.title = fullName + " | Biglietto da visita";
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      formError.hidden = true;
+      const data = {};
+      fields.forEach(key => data[key] = getField(key).value.trim());
+      if (data.website && !normalizeWebsite(data.website)) {
+        formError.textContent = "Inserisci un indirizzo web valido.";
+        formError.hidden = false; getField("website").focus(); return;
+      }
+      if (data.website2 && !normalizeWebsite(data.website2)) {
+        formError.textContent = "Inserisci un indirizzo web valido.";
+        formError.hidden = false; getField("website2").focus(); return;
+      }
+      if (data.email && !getField("email").checkValidity()) {
+        formError.textContent = "Controlla il formato dell'indirizzo e-mail.";
+        formError.hidden = false; getField("email").focus(); return;
+      }
+      const normalized = normalizeProfile(data);
+      normalized.company = DEFAULT_VALUES.company;
+      normalized.website = DEFAULT_VALUES.website;
+      normalized.website2 = DEFAULT_VALUES.website2;
+      if (!saveProfile(normalized)) {
+        formError.textContent = "Non è stato possibile salvare i dati. Controlla lo spazio disponibile nel browser.";
+        formError.hidden = false; return;
+      }
+      profile = normalized;
+      showCard();
+    });
+    getField("editProfile").addEventListener("click", () => showSetup(profile));
+    cancelEdit.addEventListener("click", () => profile ? showCard() : showSetup(null));
+
+    function escapeVCard(value) {
+      return String(value || "").replace(/\\/g, "\\\\").replace(/\r\n|\r|\n/g, "\\n").replace(/;/g, "\\;").replace(/,/g, "\\,");
+    }
+    function createVCard() {
+      const p = profile;
+      const lines = [
+        "BEGIN:VCARD", "VERSION:3.0",
+        "N:" + escapeVCard(p.lastName) + ";" + escapeVCard(p.firstName) + ";;;",
+        "FN:" + escapeVCard(p.firstName + " " + p.lastName),
+        "ORG:" + escapeVCard("Istituti Clinici Scientifici Maugeri SpA Società Benefit"),
+        "TITLE:" + escapeVCard(p.role)
+      ];
+      if (p.department) lines.push("NOTE:" + escapeVCard(p.department));
+      if (p.workPhone) lines.push("TEL;TYPE=WORK,VOICE:" + escapeVCard(p.workPhone.replace(/[^\d+]/g, "")));
+      if (p.mobile) lines.push("TEL;TYPE=CELL,VOICE:" + escapeVCard(p.mobile.replace(/[^\d+]/g, "")));
+      if (p.email) lines.push("EMAIL;TYPE=WORK:" + escapeVCard(p.email));
+      if (p.street || p.city || p.postalCode) lines.push("ADR;TYPE=WORK:;;" + escapeVCard(p.street) + ";" + escapeVCard(p.city) + ";;" + escapeVCard(p.postalCode) + ";Italia");
+      const website = normalizeWebsite(p.website);
+      const website2 = normalizeWebsite(p.website2);
+      if (website) lines.push("URL:" + website);
+      if (website2) lines.push("URL:" + website2);
+      lines.push("END:VCARD");
+      return lines.join("\r\n") + "\r\n";
+    }
+    function contactFilename() {
+      return (profile.firstName + "_" + profile.lastName).replace(/[^\p{L}\p{N}_-]+/gu, "_") + ".vcf";
+    }
+    function downloadVCard() {
+      const blob = new Blob([createVCard()], { type: "text/vcard;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url; link.download = contactFilename();
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+    async function addToContacts() {
+      const vcard = createVCard();
+      try {
+        if (navigator.share && navigator.canShare && typeof File !== "undefined") {
+          const file = new File([vcard], contactFilename(), { type: "text/vcard" });
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: "Scheda contatto", text: "Il mio biglietto da visita" });
+            return;
+          }
         }
-        function formattaTelefono(numero, tipo) {
-            if (!numero) return "";
-            let cifre = numero.replace(/\D/g, "");
-            if (cifre.startsWith("39") &&
-                (cifre.length === 12 || cifre.length === 13)) {
-                cifre = cifre.substring(2);
-            }
-            let formattato = numero;
-            if (tipo === "fisso" && cifre.length === 10) {
-                formattato = cifre.replace(
-                    /^(\d{4})(\d{2})(\d{2})(\d{2})$/,
-                    "$1 $2 $3 $4"
-                );
-            } else if (tipo === "fisso" && cifre.length === 11) {
-                formattato = cifre.replace(
-                    /^(\d{4})(\d{2})(\d{2})(\d{3})$/,
-                    "$1 $2 $3 $4"
-                );
-            } else if (tipo === "mobile" && cifre.length === 10) {
-                formattato = cifre.replace(
-                    /^(\d{3})(\d{2})(\d{2})(\d{3})$/,
-                    "$1 $2 $3 $4"
-                );
-            } else {
-                return numero;
-            }
-            return "+39 " + formattato;
-        }
-        function normalizeProfile(data) {
-            const normalized = {};
-            fields.forEach(function (key) {
-                normalized[key] = String(data[key] || "").trim();
-            });
-            return normalized;
-        }
-        function loadProfile() {
-            try {
-                const saved = localStorage.getItem(STORAGE_KEY);
-                if (!saved) {
-                    return null;
-                }
-                const parsed = JSON.parse(saved);
-                if (!parsed || typeof parsed !== "object") {
-                    return null;
-                }
-                const normalized = normalizeProfile(parsed);
-                if (!normalized.firstName ||
-                    !normalized.lastName ||
-                    !normalized.role ||
-                    !normalized.company) {
-                    return null;
-                }
-                return normalized;
-            } catch (error) {
-                console.error("Impossibile leggere i dati salvati:", error);
-                return null;
-            }
-        }
-        function saveProfile(data) {
-            try {
-                localStorage.setItem(
-                    STORAGE_KEY,
-                    JSON.stringify(data)
-                );
-                return true;
-            } catch (error) {
-                console.error("Impossibile salvare i dati:", error);
-                return false;
-            }
-        }
-        function getUrlParameter(name) {
-            const params = new URLSearchParams(window.location.search);
-            return params.get(name) || "";
-        }
-        function showSetup(data) {
-            editing = Boolean(data);
-            
-            const firstNameFromUrl = getUrlParameter("firstName") || '';
-            const lastNameFromUrl = getUrlParameter("lastName") || '';
-            const workPhoneFromUrl = getUrlParameter("workPhone") || '';
-            const mobileFromUrl = getUrlParameter("mobile") || '';
-            const streetFromUrl = getUrlParameter("street") || '';
-            const cityFromUrl = getUrlParameter("city") || '';
-            const postalCodeFromUrl = getUrlParameter("postalCode") || '';
-            const roleFromUrl = getUrlParameter("role") || '';
-            const departmentFromUrl = getUrlParameter("department") || '';
-            const emailFromUrl = getUrlParameter("email") || '';
-            
-            fields.forEach(function (key) {
-                const field = getField(key);
-                if (key === "firstName" && firstNameFromUrl) {
-                    field.value = firstNameFromUrl;
-                    return;
-                }
-                if (key === "lastName" && lastNameFromUrl) {
-                    field.value = lastNameFromUrl;
-                    return;
-                }
-                if (key === "workPhone" && workPhoneFromUrl) {
-                    field.value = workPhoneFromUrl;
-                    return;
-                }
-                if (key === "mobile" && mobileFromUrl) {
-                    field.value = mobileFromUrl;
-                    return;
-                }
-                if (key === "street" && streetFromUrl) {
-                    field.value = streetFromUrl;
-                    return;
-                }
-                if (key === "city" && cityFromUrl) {
-                    field.value = cityFromUrl;
-                    return;
-                }
-                if (key === "postalCode" && postalCodeFromUrl) {
-                    field.value = postalCodeFromUrl;
-                    return;
-                }
-                if (key === "role" && roleFromUrl) {
-                    field.value = roleFromUrl;
-                    return;
-                }
-                if (key === "department" && departmentFromUrl) {
-                    field.value = departmentFromUrl;
-                    return;
-                }
-                if (key === "email" && emailFromUrl) {
-                    field.value = emailFromUrl;
-                    return;
-                }
-                if (data) {
-                    field.value = data[key] || DEFAULT_VALUES[key] || "";
-                } else {
-                    field.value = DEFAULT_VALUES[key] || "";
-                }
-            });
-            document.getElementById("formTitle").textContent =
-                editing ? "Modifica il tuo biglietto" :
-                          "Il tuo biglietto digitale";
-            cancelEdit.hidden = !editing;
-            cardView.hidden = true;
-            setupView.hidden = false;
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        }
-        function showCard() {
-            setupView.hidden = true;
-            cardView.hidden = false;
-            renderCard();
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        }
-        function setText(id, value) {
-            getField(id).textContent = value || "";
-        }
-        function setOptionalVisibility(id, visible) {
-            getField(id).hidden = !visible;
-        }
-        function normalizeWebsite(value) {
-            if (!value) {
-                return "";
-            }
-            let website = value.trim();
-            if (!/^https?:\/\//i.test(website)) {
-                website = "https://" + website;
-            }
-            try {
-                const url = new URL(website);
-                if (url.protocol !== "https:" &&
-                    url.protocol !== "http:") {
-                    return "";
-                }
-                return url.href;
-            } catch {
-                return "";
-            }
-        }
-        function createLink(text, href, label) {
-            const row = document.createElement("div");
-            row.className = "contact";
-            const title = document.createElement("span");
-            title.className = "label";
-            title.textContent = label;
-            const link = document.createElement("a");
-            link.className = "value";
-            link.textContent = text;
-            link.href = href;
-            if (href.startsWith("https://") ||
-                href.startsWith("http://")) {
-                link.target = "_blank";
-                link.rel = "noopener noreferrer";
-            }
-            row.appendChild(title);
-            row.appendChild(link);
-            return row;
-        }
-        function renderCard() {
-            if (!profile) {
-                return;
-            }
-            const fullName =
-                profile.firstName + " " + profile.lastName;
-            setText("displayName", fullName);
-            setText("displayRole", profile.role);
-            setText("displayDepartment", profile.department);
-            setText("displayCompany", profile.company);
-            setOptionalVisibility(
-                "displayDepartment",
-                Boolean(profile.department)
-            );
-            const contacts = getField("displayContacts");
-            contacts.replaceChildren();
-            if (profile.workPhone) {
-                contacts.appendChild(
-                    createLink(
-                        formattaTelefono(profile.workPhone, "fisso"),
-                        "tel:" + profile.workPhone.replace(/[^\d+]/g, ""),
-                        "telefono"
-                    )
-                );
-            }
-            if (profile.mobile) {
-                contacts.appendChild(
-                    createLink(
-                        formattaTelefono(profile.mobile, "mobile"),
-                        "tel:" + profile.mobile.replace(/[^\d+]/g, ""),
-                        "cellulare"
-                    )
-                );
-            }
-            if (profile.email) {
-                contacts.appendChild(
-                    createLink(
-                        profile.email,
-                        "mailto:" + profile.email,
-                        "e-mail"
-                    )
-                );
-            }
-            setOptionalVisibility(
-                "companySeparator",
-                Boolean(
-                    profile.company ||
-                    profile.street ||
-                    profile.city ||
-                    profile.website ||
-                    profile.website2
-                )
-            );
-            const addressParts = [];
-            if (profile.street) {
-                addressParts.push(profile.street);
-            }
-            const cityParts = [];
-            if (profile.postalCode) {
-                cityParts.push(profile.postalCode);
-            }
-            if (profile.city) {
-                cityParts.push(profile.city);
-            }
-            if (cityParts.length) {
-                addressParts.push(cityParts.join(" "));
-            }
-            setText("displayAddress", addressParts.join(" - "));
-            setOptionalVisibility(
-                "displayAddress",
-                addressParts.length > 0
-            );
-            const websiteLine = getField("displayWebsiteLine");
-            websiteLine.replaceChildren();
-            const websiteUrl = normalizeWebsite(profile.website);
-            if (websiteUrl) {
-                const link = document.createElement("a");
-                link.className = "website";
-                link.href = websiteUrl;
-                link.target = "_blank";
-                link.rel = "noopener noreferrer";
-                websiteLine.textContent = "L'Azienda";
-                websiteLine.onclick = () => {
-                    window.open(websiteUrl, "_blank");
-                };
-                websiteLine.hidden = false;
-            } else {
-                websiteLine.hidden = true;
-            }
-            const websiteLine2 = getField("displayWebsiteLine2");
-            websiteLine2.replaceChildren();
-            const websiteUrl2 = normalizeWebsite(profile.website2);
-            if (websiteUrl2) {
-                const link2 = document.createElement("a");
-                link2.className = "website";
-                link2.href = websiteUrl2;
-                link2.target = "_blank";
-                link2.rel = "noopener noreferrer";
-                websiteLine2.textContent = "Fondazione Salvatore Maugeri";
-                websiteLine2.onclick = () => {
-                    window.open(websiteUrl2, "_blank");
-                };
-                websiteLine2.hidden = false;
-            } else {
-                websiteLine2.hidden = true;
-            }
-            const pdfLine = getField("displayPdfLine");
-            pdfLine.replaceChildren();
-            const pdfLink = document.createElement("a");
-            pdfLink.className = "website";
-            pdfLink.href = "company_profile.pdf";
-            pdfLink.target = "_blank";
-            pdfLink.rel = "noopener noreferrer";
-            pdfLine.textContent = "Company Profile Maugeri";
-            pdfLine.onclick = () => {
-                window.open("company_profile.pdf", "_blank");
-            };
-            pdfLine.hidden = false;
-            document.title = fullName + " | Biglietto da visita";
-        }
-        form.addEventListener("submit", function (event) {
-            event.preventDefault();
-            formError.hidden = true;
-            const data = {};
-            fields.forEach(function (key) {
-                data[key] = getField(key).value.trim();
-            });
-            if (data.website && !normalizeWebsite(data.website)) {
-                formError.textContent =
-                    "Inserisci un indirizzo web valido.";
-                formError.hidden = false;
-                getField("website").focus();
-                return;
-            }
-            if (data.website2 && !normalizeWebsite(data.website2)) {
-                formError.textContent =
-                    "Inserisci un indirizzo web valido.";
-                formError.hidden = false;
-                getField("website2").focus();
-                return;
-            }
-            if (data.email &&
-                !getField("email").checkValidity()) {
-                formError.textContent =
-                    "Controlla il formato dell'indirizzo e-mail.";
-                formError.hidden = false;
-                getField("email").focus();
-                return;
-            }
-            const normalized = normalizeProfile(data);
-            if (!saveProfile(normalized)) {
-                formError.textContent =
-                    "Non è stato possibile salvare i dati. " +
-                    "Controlla lo spazio disponibile nel browser.";
-                formError.hidden = false;
-                return;
-            }
-            profile = normalized;
-            showCard();
-        });
-        getField("editProfile").addEventListener("click", function () {
-            showSetup(profile);
-        });
-        cancelEdit.addEventListener("click", function () {
-            if (profile) {
-                showCard();
-            } else {
-                showSetup(null);
-            }
-        });
-        // Creazione del contatto vCard
-        function escapeVCard(value) {
-            return String(value || "")
-                .replace(/\\/g, "\\\\")
-                .replace(/\r\n|\r|\n/g, "\\n")
-                .replace(/;/g, "\\;")
-                .replace(/,/g, "\\,");
-        }
-        function createVCard() {
-            const p = profile;
-            const lines = [
-                "BEGIN:VCARD",
-                "VERSION:3.0",
-                "N:" + escapeVCard(p.lastName) + ";" +
-                    escapeVCard(p.firstName) + ";;;",
-                "FN:" + escapeVCard(
-                    p.firstName + " " + p.lastName
-                ),
-                "ORG:" + escapeVCard(p.company),
-                "TITLE:" + escapeVCard(p.role)
-            ];
-            if (p.department) {
-                lines.push(
-                    "NOTE:" + escapeVCard(p.department)
-                );
-            }
-            if (p.workPhone) {
-                lines.push(
-                    "TEL;TYPE=WORK,VOICE:" +
-                    escapeVCard(formattaTelefono(p.workPhone, "fisso"))
-                );
-            }
-            if (p.mobile) {
-                lines.push(
-                    "TEL;TYPE=CELL,VOICE:" +
-                    escapeVCard(formattaTelefono(p.mobile, "mobile"))
-                );
-            }
-            if (p.email) {
-                lines.push(
-                    "EMAIL;TYPE=WORK:" +
-                    escapeVCard(p.email)
-                );
-            }
-            if (p.street || p.city || p.postalCode) {
-                lines.push(
-                    "ADR;TYPE=WORK:;;" +
-                    escapeVCard(p.street) + ";" +
-                    escapeVCard(p.city) + ";;" +
-                    escapeVCard(p.postalCode) + ";Italia"
-                );
-            }
-            const website = normalizeWebsite(p.website);
-            if (website) {
-                lines.push("URL:" + website);
-            }
-            const website2 = normalizeWebsite(p.website2);
-            if (website2) {
-                lines.push("URL:" + website2);
-            }
-            lines.push("END:VCARD");
-            return lines.join("\r\n") + "\r\n";
-        }
-        function downloadVCard() {
-            const blob = new Blob(
-                [createVCard()],
-                { type: "text/vcard;charset=utf-8" }
-            );
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            const filename = (
-                profile.firstName + "_" + profile.lastName
-            ).replace(/[^\p{L}\p{N}_-]+/gu, "_");
-            link.href = url;
-            link.download = filename + ".vcf";
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            setTimeout(function () {
-                URL.revokeObjectURL(url);
-            }, 1500);
-        }
-        async function addToContacts() {
-            const vcard = createVCard();
-            const filename = (
-                profile.firstName + "_" + profile.lastName
-            ).replace(/[^\p{L}\p{N}_-]+/gu, "_") + ".vcf";
-            try {
-                if (navigator.share && navigator.canShare &&
-                    typeof File !== "undefined") {
-                    const file = new File(
-                        [vcard],
-                        filename,
-                        { type: "text/vcard" }
-                    );
-                    if (navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                            files: [file],
-                            title: "Scheda contatto",
-                            text: "Il mio biglietto da visita"
-                        });
-                        return;
-                    }
-                }
-            } catch (error) {
-                if (error.name === "AbortError") {
-                    return;
-                }
-                console.warn(
-                    "Condivisione diretta non disponibile:",
-                    error
-                );
-            }
-            downloadVCard();
-        }
-        getField("shareContact").addEventListener(
-            "click",
-            addToContacts
-        );
-        // Generazione QR Code
-        async function showQRCode() {
-            const overlay = getField("qrOverlay");
-            const container = getField("qrcode");
-            const requestId = ++qrRequestId;
-            if (currentQRUrl) {
-                URL.revokeObjectURL(currentQRUrl);
-                currentQRUrl = null;
-            }
-            container.replaceChildren();
-            const loading = document.createElement("p");
-            loading.textContent = "Generazione QR Code...";
-            container.appendChild(loading);
-            setText(
-                "qrContactName",
-                profile.firstName + " " + profile.lastName +
-                " • " + profile.company
-            );
-            overlay.classList.add("visible");
-            getField("closeQR").focus();
-            try {
-                const params = new URLSearchParams({
-                    size: "240x240",
-                    data: createVCard(),
-                    ecc: "L",
-                    margin: "10"
-                });
-                const response = await fetch(
-                    "https://api.qrserver.com/v1/create-qr-code/?" +
-                    params.toString()
-                );
-                if (!response.ok) {
-                    throw new Error("Servizio QR Code non disponibile");
-                }
-                const blob = await response.blob();
-                if (!blob.type.startsWith("image/")) {
-                    throw new Error("Risposta QR non valida");
-                }
-                if (requestId !== qrRequestId) {
-                    return;
-                }
-                const img = document.createElement("img");
-                img.alt = "QR Code del biglietto da visita";
-                img.width = 240;
-                img.height = 240;
-                currentQRUrl = URL.createObjectURL(blob);
-                img.src = currentQRUrl;
-                container.replaceChildren(img);
-            } catch (error) {
-                if (requestId !== qrRequestId) {
-                    return;
-                }
-                console.error("Errore QR Code:", error);
-                container.replaceChildren();
-                const message = document.createElement("p");
-                message.textContent =
-                    "Non è stato possibile generare il QR Code. " +
-                    "Verifica la connessione Internet e riprova.";
-                container.appendChild(message);
-            }
-        }
-        function closeQRCode() {
-            qrRequestId++;
-            getField("qrOverlay").classList.remove("visible");
-            if (currentQRUrl) {
-                URL.revokeObjectURL(currentQRUrl);
-                currentQRUrl = null;
-            }
-            getField("qrcode").replaceChildren();
-            getField("openQR").focus();
-        }
-        getField("openQR").addEventListener("click", showQRCode);
-        getField("closeQR").addEventListener("click", closeQRCode);
-        getField("qrOverlay").addEventListener("click", function (event) {
-            if (event.target === getField("qrOverlay")) {
-                closeQRCode();
-            }
-        });
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "Escape" &&
-                getField("qrOverlay").classList.contains("visible")) {
-                closeQRCode();
-            }
-        });
-        // Avvio: biglietto se già configurato, altrimenti primo accesso
-        profile = loadProfile();
-        if (profile) {
-            showCard();
-        } else {
-            showSetup(null);
-        }
-    </script>
+      } catch (error) {
+        if (error.name === "AbortError") return;
+        console.warn("Condivisione diretta non disponibile:", error);
+      }
+      downloadVCard();
+    }
+    getField("shareContact").addEventListener("click", addToContacts);
+
+    async function showQRCode() {
+      const overlay = getField("qrOverlay");
+      const container = getField("qrcode");
+      const requestId = ++qrRequestId;
+      if (currentQRUrl) { URL.revokeObjectURL(currentQRUrl); currentQRUrl = null; }
+      container.replaceChildren();
+      const loading = document.createElement("p");
+      loading.textContent = "Generazione QR Code...";
+      container.appendChild(loading);
+      setText("qrContactName", profile.firstName + " " + profile.lastName);
+      overlay.classList.add("visible");
+      getField("closeQR").focus();
+      try {
+        const params = new URLSearchParams({ size: "240x240", data: createVCard(), ecc: "M", margin: "10" });
+        const response = await fetch("https://api.qrserver.com/v1/create-qr-code/?" + params.toString());
+        if (!response.ok) throw new Error("Servizio QR Code non disponibile");
+        const blob = await response.blob();
+        if (!blob.type.startsWith("image/")) throw new Error("Risposta QR non valida");
+        if (requestId !== qrRequestId) return;
+        const img = document.createElement("img");
+        img.alt = "QR Code del biglietto da visita"; img.width = 240; img.height = 240;
+        currentQRUrl = URL.createObjectURL(blob); img.src = currentQRUrl;
+        container.replaceChildren(img);
+      } catch (error) {
+        if (requestId !== qrRequestId) return;
+        console.error("Errore QR Code:", error);
+        container.replaceChildren();
+        const message = document.createElement("p");
+        message.textContent = "Non è stato possibile generare il QR Code. Verifica la connessione Internet e riprova.";
+        container.appendChild(message);
+      }
+    }
+    function closeQRCode() {
+      qrRequestId++;
+      getField("qrOverlay").classList.remove("visible");
+      if (currentQRUrl) { URL.revokeObjectURL(currentQRUrl); currentQRUrl = null; }
+      getField("qrcode").replaceChildren();
+      getField("openQR").focus();
+    }
+    getField("openQR").addEventListener("click", showQRCode);
+    getField("closeQR").addEventListener("click", closeQRCode);
+    getField("qrOverlay").addEventListener("click", event => { if (event.target === getField("qrOverlay")) closeQRCode(); });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && getField("qrOverlay").classList.contains("visible")) closeQRCode();
+    });
+
+    profile = loadProfile();
+    if (profile) showCard();
+    else showSetup(null);
+  </script>
 </body>
 </html>
