@@ -178,6 +178,11 @@
     .maps-modal p { color: #64757a; font-size: 14px; margin-bottom: 20px; }
     .maps-modal button { width: 100%; min-height: 48px; margin-top: 10px; border: 0; border-radius: 14px; background: rgb(55, 111, 128); color: white; font-weight: 700; cursor: pointer; }
     .maps-modal #cancelMapsButton { background: #e4e8e9; color: #365762; }
+    .save-contact-glow { position: relative; overflow: hidden; border: 1px solid #C9DDE1; background: #fff; }
+    .save-contact-glow::before { content: ""; position: absolute; inset: -2.5px; border-radius: 15px; background: conic-gradient(from 0deg, transparent 0deg, transparent 320deg, #367F8F 335deg, #DCECEF 345deg, transparent 360deg); animation: border-spin 5s linear infinite; }
+    .save-contact-glow::after { content: ""; position: absolute; inset: 2.5px; border-radius: 13px; background: white; }
+    .save-contact-glow svg, .save-contact-glow span { position: relative; z-index: 1; }
+    @keyframes border-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); }}
   </style>
 </head>
 <body>
@@ -273,14 +278,14 @@
       </div>
       
       <div id="publicActions" class="buttons" hidden>
-        <button id="savePublicContact" class="action-button" type="button">
+        <button id="savePublicContact" class="action-button outline save-contact-glow" type="button">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 5v14M5 12h14"></path>
           </svg>
           <span>Salva contatto</span>
         </button>
       </div>
-
+      
     </section>
   </main>
 
